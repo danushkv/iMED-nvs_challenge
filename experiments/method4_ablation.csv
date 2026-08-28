@@ -1,0 +1,7 @@
+variant,protocol,sequence,initial_gaussians,final_gaussians,source_psnr,source_ssim,target_psnr,target_ssim,decision
+M4-A_50k,corrected_geometry,session_004_scene_2_tool_1,50000,83852,24.594303,0.841456,20.665110,0.700477,keep
+M4-A_50k,adapted_baseline,session_004_scene_2_tool_1,50000,83852,24.594303,0.841456,22.210973,0.728242,keep
+M4-A_G2_100k,corrected_geometry,session_004_scene_2_tool_1,100000,128990,25.469932,0.846280,20.251483,0.688781,drop
+M4-A_G2_100k,adapted_baseline,session_004_scene_2_tool_1,100000,128990,25.469932,0.846280,21.922119,0.713689,drop
+M4-B_surface_init,corrected_geometry,session_004_scene_2_tool_1,50000,99278,24.159316,0.841608,20.884137,0.699523,drop
+M4-B_surface_init,adapted_baseline,session_004_scene_2_tool_1,50000,99278,24.159316,0.841608,22.041414,0.709179,drop

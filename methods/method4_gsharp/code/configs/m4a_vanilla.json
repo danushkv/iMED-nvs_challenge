@@ -1,0 +1,14 @@
+{
+  "method": "M4-A G-SHARP-iMED",
+  "initialization": "upstream multi_frame_depth_unprojection + knn_scale_init",
+  "init_max_points": 50000,
+  "init_opacity": 0.1,
+  "init_scale_multiplier": 1.0,
+  "world_scale": 1.0,
+  "depth_units": "millimetres",
+  "coarse_steps": 500,
+  "fine_steps": 3000,
+  "depth_mode": "binocular",
+  "seed": 42,
+  "architecture_and_losses": "pinned upstream defaults; see GSHARP_NOTES.md"
+}

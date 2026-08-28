@@ -1,0 +1,34 @@
+# Generated source snapshots (created by scripts/assemble_sources.sh)
+methods/*/code/__pycache__/
+methods/*/code/**/*.pyc
+
+# Runtime products
+**/outputs/
+**/output/
+**/results/
+**/checkpoints/
+**/logs/
+**/wandb/
+**/*.pt
+**/*.pth
+**/*.ckpt
+**/*.npy
+
+# Environments and compiled extensions
+**/.venv/
+**/envs/
+**/toolkits/
+**/downloads/
+**/build/
+**/*.so
+**/*.egg-info/
+
+# Dataset mounts and optional private qualitative gallery
+data/
+dataset/
+assets/qualitative/*.png
+assets/qualitative/*.jpg
+assets/qualitative/*.gif
+
+# Keep the gallery documentation
+!assets/qualitative/README.md

@@ -1,0 +1,18 @@
+family,variant,scope,protocol,sequences,frames,psnr,ssim,status,notes
+M1,initial_rgbd,hidden,organizer_hidden,,,19.247,0.581,historical,training-free RGB-D reprojection
+M1.5,MV1A,hidden,organizer_hidden,,,20.089,0.608,keep,confirmed Phase-11 submission
+M1.5,MV1A,local_representative,adapted_baseline,1,199,21.761684974,0.681555124,reference,session_004_scene_2_tool_1
+M2,B0,local_development,endo4dgs_native,4,796,19.232497692,0.566099636,reference,paired baseline
+M2,B1_metric_l1_w5e-5,local_development,endo4dgs_native,4,796,19.261714458,0.565931849,keep,accepted depth component
+M2,B0,local_holdout,endo4dgs_native,1,199,19.099723816,0.502291560,reference,session_006_scene_7_tool_1
+M2,B1_metric_l1_w5e-5,local_holdout,endo4dgs_native,1,199,19.184625626,0.505293131,keep,preselected holdout
+M3,M3-A,local_development,corrected_geometry,4,796,19.0346,0.49215,reference,exact MV1A
+M3,M3-B,local_development,corrected_geometry,4,796,19.1135,0.50371,keep,surface-aware structural candidate
+M3,M3-C,local_development,corrected_geometry,4,796,19.0997,0.50163,keep,confidence-gated candidate
+M3,M3-A,local_development,adapted_baseline,4,796,20.2330,0.56517,reference,exact MV1A
+M3,M3-B,local_development,adapted_baseline,4,796,20.2441,0.57482,keep,SSIM winner
+M3,M3-C,local_development,adapted_baseline,4,796,20.2605,0.57222,keep,PSNR winner
+M4,M4-A,local_development,corrected_geometry,4,796,18.170299067,0.574302265,keep,50k corrected scene scale
+M4,M4-A,local_development,adapted_baseline,4,796,18.280595790,0.623406003,keep,independent G-SHARP candidate
+M4,M4-B,local_representative,corrected_geometry,1,199,20.884137,0.699523,drop,surface initialization only
+M4,M4-B,local_representative,adapted_baseline,1,199,22.041414,0.709179,drop,lost SSIM on 193 of 199 frames

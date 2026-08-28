@@ -1,0 +1,17 @@
+{
+  "method": "M4-A G-SHARP-iMED",
+  "purpose": "Correct millimetre-aware DynamicStrategy scene-scale wiring after failed source reconstruction",
+  "controlled_difference_from_failed_run": "strategy_scene_scale only",
+  "strategy_scene_scale": "initial_xyz_max_axis_extent",
+  "initialization": "upstream multi_frame_depth_unprojection + knn_scale_init",
+  "init_max_points": 50000,
+  "init_opacity": 0.1,
+  "init_scale_multiplier": 1.0,
+  "world_scale": 1.0,
+  "depth_units": "millimetres",
+  "coarse_steps": 500,
+  "fine_steps": 3000,
+  "depth_mode": "binocular",
+  "seed": 42,
+  "architecture_losses_learning_rates_strategy_thresholds": "unchanged pinned upstream defaults"
+}

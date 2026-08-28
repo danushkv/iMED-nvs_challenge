@@ -1,0 +1,20 @@
+{
+  "method": "M4-A G2 G-SHARP-iMED",
+  "purpose": "Final controlled M4-A ablation testing whether denser source-derived initialization improves vanilla G-SHARP",
+  "parent_configuration": "configs/m4a_scale_fixed.json",
+  "controlled_difference_from_m4a": "init_max_points only: 50000 -> 100000",
+  "sequence": "session_004_scene_2_tool_1",
+  "initialization": "upstream multi_frame_depth_unprojection + knn_scale_init",
+  "init_max_points": 100000,
+  "init_opacity": 0.1,
+  "init_scale_multiplier": 1.0,
+  "world_scale": 1.0,
+  "depth_units": "millimetres",
+  "strategy_scene_scale": "initial_xyz_max_axis_extent",
+  "coarse_steps": 500,
+  "fine_steps": 3000,
+  "depth_mode": "binocular",
+  "seed": 42,
+  "architecture_losses_learning_rates_strategy_thresholds": "unchanged from corrected M4-A",
+  "decision_rule": "Evaluate once on the preselected representative sequence, then stop M4-A ablations and proceed to M4-B"
+}

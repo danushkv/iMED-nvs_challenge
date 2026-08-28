@@ -1,0 +1,51 @@
+ARG BASE_IMAGE=pytorch/pytorch@sha256:f60beccdc8c50ed35636b982046ef63de3f5e8a6341a62e4a0351b570acaeaaa
+FROM ${BASE_IMAGE}
+
+ARG GSPLAT_COMMIT=846c07932a77a901b474c40dd7fbfe42965ab354
+ARG CUDA_ARCH_LIST="8.0;8.6"
+
+LABEL org.opencontainers.image.title="iMED NVS Method 4A G-SHARP"
+LABEL org.opencontainers.image.description="Frozen M4-A 50k G-SHARP-iMED challenge submission"
+LABEL org.opencontainers.image.base.name="pytorch/pytorch@sha256:f60beccdc8c50ed35636b982046ef63de3f5e8a6341a62e4a0351b570acaeaaa"
+LABEL imed.method.variant="m4a"
+LABEL imed.gsplat.commit="${GSPLAT_COMMIT}"
+LABEL imed.cuda.architectures="${CUDA_ARCH_LIST}"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    CUDA_HOME=/usr/local/cuda \
+    CUDACXX=/usr/local/cuda/bin/nvcc \
+    TORCH_CUDA_ARCH_LIST=${CUDA_ARCH_LIST} \
+    MAX_JOBS=2 \
+    BUILD_3DGS=1 \
+    NUM_CHANNELS=3,4 \
+    PYTHONPATH=/workspace:/workspace/method4_gsharp/third_party/gsplat
+
+WORKDIR /workspace
+
+COPY docker_submission/requirements.txt /tmp/m4_requirements.txt
+RUN python -m pip install --no-cache-dir -r /tmp/m4_requirements.txt
+
+# Keep the pinned source checkout in the runtime image because the frozen
+# trainer imports examples.dynamic_surgical_trainer directly from this tree.
+COPY third_party/gsplat /workspace/method4_gsharp/third_party/gsplat
+COPY GSHARP_GSPLAT_COMMIT.txt /workspace/method4_gsharp/GSHARP_GSPLAT_COMMIT.txt
+
+RUN test "$(tr -d '\r\n' < /workspace/method4_gsharp/GSHARP_GSPLAT_COMMIT.txt)" = "${GSPLAT_COMMIT}" \
+    && python -m pip install \
+        --no-cache-dir \
+        --no-build-isolation \
+        --no-deps \
+        -e /workspace/method4_gsharp/third_party/gsplat \
+    && python -m pip check \
+    && python -c "import gsplat, torch; assert torch.__version__ == '2.9.1+cu126'; assert torch.version.cuda == '12.6'; print('gsplat import:', gsplat.__file__)"
+
+COPY datasets /workspace/method4_gsharp/datasets
+COPY configs/m4a_scale_fixed.json /workspace/method4_gsharp/configs/m4a_scale_fixed.json
+COPY train_imed.py render_imed.py /workspace/method4_gsharp/
+COPY scripts/smoke_test_gsplat.py /workspace/method4_gsharp/scripts/smoke_test_gsplat.py
+COPY docker_submission/entrypoint_m4a.py /workspace/method4_gsharp/docker_submission/entrypoint_m4a.py
+
+ENTRYPOINT ["python", "/workspace/method4_gsharp/docker_submission/entrypoint_m4a.py"]
+CMD ["run-dataset", "--data-root", "/input", "--output-root", "/output"]

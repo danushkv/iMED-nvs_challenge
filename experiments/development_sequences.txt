@@ -1,0 +1,8 @@
+# Shared M3/M4 local development subset: 199 synchronized frames per sequence.
+development session_004_scene_2_tool_1
+development session_004_scene_6_tool_2
+development session_005_scene_7_tool_2
+development session_007_scene_11_tool_3
+
+# Preselected Method 2 confirmation sequence.
+holdout session_006_scene_7_tool_1

@@ -1,0 +1,9 @@
+# Fixed before inspecting any additional target-view metrics.
+# Format: role physical_gpu_id sequence
+
+development 0 session_004_scene_2_tool_1
+development 0 session_005_scene_7_tool_2
+development 1 session_004_scene_6_tool_2
+development 1 session_007_scene_11_tool_3
+
+holdout 0 session_006_scene_7_tool_1

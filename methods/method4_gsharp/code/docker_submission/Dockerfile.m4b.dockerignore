@@ -1,0 +1,38 @@
+# Development environments and downloaded toolkits must never enter context.
+envs/
+toolkits/
+downloads/
+
+# Experiment products and logs are not submission inputs.
+outputs*/
+target_eval*/
+checkpoints/
+logs/
+*.log
+*.out
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Local evaluation, comparison, and other variant code is excluded.
+compare_m3.py
+compare_m4ab.py
+scripts/evaluate_dev.sh
+scripts/render_source_dev.sh
+scripts/render_target_dev.sh
+scripts/run_dev.sh
+scripts/run_m4a_g2_one.sh
+scripts/run_m4b_one.sh
+scripts/verify_geometry_convention.py
+scripts/verify_m4b_initialization.py
+train_imed.py
+
+# VCS and upstream development-only material.
+.git/
+third_party/gsplat/.git/
+third_party/gsplat/docs/
+third_party/gsplat/tests/
+third_party/gsplat/lint/
+third_party/gsplat/third_party/googletest/
+third_party/gsplat/examples/benchmarks/
+third_party/gsplat/examples/datasets/data/

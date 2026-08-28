@@ -1,0 +1,16 @@
+# Strict allowlist for the repository-root build context.
+**
+!confidence.py
+!surface_geometry.py
+!surface_splat.py
+!configs/
+configs/*
+!configs/m3_surface_default.json
+!configs/m3_confidence_default.json
+!docker_submission/
+docker_submission/*
+!docker_submission/method3_candidates/
+docker_submission/method3_candidates/*
+!docker_submission/method3_candidates/Dockerfile
+!docker_submission/method3_candidates/Dockerfile.dockerignore
+!docker_submission/method3_candidates/submission_adapter.py

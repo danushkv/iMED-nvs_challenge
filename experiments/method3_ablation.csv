@@ -1,0 +1,11 @@
+protocol,sequence,m3a_psnr,m3b_psnr,m3c_psnr,m3a_ssim,m3b_ssim,m3c_ssim
+corrected_geometry,session_004_scene_2_tool_1,20.1849,20.2641,20.2354,0.60437,0.61142,0.60998
+corrected_geometry,session_004_scene_6_tool_2,19.8311,19.8871,19.8652,0.60378,0.61232,0.60986
+corrected_geometry,session_005_scene_7_tool_2,17.6205,17.7486,17.7506,0.39676,0.42016,0.41755
+corrected_geometry,session_007_scene_11_tool_3,18.5017,18.5544,18.5474,0.36368,0.37093,0.36915
+corrected_geometry,mean,19.0346,19.1135,19.0997,0.49215,0.50371,0.50163
+adapted_baseline,session_004_scene_2_tool_1,21.7617,21.7998,21.7914,0.68156,0.68777,0.68701
+adapted_baseline,session_004_scene_6_tool_2,20.3699,20.4413,20.4083,0.62403,0.63205,0.62888
+adapted_baseline,session_005_scene_7_tool_2,20.9750,20.8782,20.9860,0.58787,0.60430,0.60214
+adapted_baseline,session_007_scene_11_tool_3,17.8254,17.8570,17.8563,0.36723,0.37517,0.37086
+adapted_baseline,mean,20.2330,20.2441,20.2605,0.56517,0.57482,0.57222

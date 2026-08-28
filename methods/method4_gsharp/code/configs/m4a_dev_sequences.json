@@ -1,0 +1,14 @@
+{
+  "selection_policy": "Exact read-only Method 3 four-sequence ablation subset for direct comparison",
+  "reference_sequence": "session_004_scene_2_tool_1",
+  "additional_sequences": [
+    "session_004_scene_6_tool_2",
+    "session_005_scene_7_tool_2",
+    "session_007_scene_11_tool_3"
+  ],
+  "configuration": "configs/m4a_scale_fixed.json",
+  "tuning_between_sequences": false,
+  "endoscope1_rgb_used_for_selection": false,
+  "method3_reference_root": "/mnt/cluster/workspaces/venkateda/method3_surface_fusion",
+  "method3_reference_access": "read-only"
+}

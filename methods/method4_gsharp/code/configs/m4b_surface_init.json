@@ -1,0 +1,39 @@
+{
+  "method": "M4-B Geometry-Bootstrapped G-SHARP",
+  "parent_baseline": "M4-A corrected 50k",
+  "controlled_difference": "Gaussian initialization only",
+  "sequence": "session_004_scene_2_tool_1",
+  "source_geometry": {
+    "inputs": "legal Endoscope2/L RGB, depth, tissue mask, K, camtoworld, time",
+    "normal_estimator": "M3 central differences: normalize(cross(du,dv))",
+    "depth_discontinuity_mm": 2.0,
+    "depth_discontinuity_relative": 0.02,
+    "geometry_confidence": "depth_margin * tangent_stability * abs(normal_dot_view)",
+    "confidence_use_m4b1": "fusion weight only; opacity is not confidence weighted"
+  },
+  "fusion": {
+    "candidate_multiplier": 4.0,
+    "voxel_size_mm": 0.5,
+    "normal_agreement_weight": "0.5 + 0.5 * clamp(dot(n, voxel_mean_n), 0, 1)",
+    "final_max_points": 50000,
+    "seed": 42
+  },
+  "gaussians": {
+    "mean": "fused world-space source surface position",
+    "color": "confidence/view/normal-agreement weighted Endoscope2 RGB",
+    "rotation": "columns [tangent_1, tangent_2, normal], gsplat wxyz quaternion",
+    "tangent_scale": "max(M3 half-pixel 3D footprint, 0.5 * voxel_size)",
+    "thickness_ratio": 0.2,
+    "opacity": 0.1
+  },
+  "unchanged_from_m4a": {
+    "coarse_steps": 500,
+    "fine_steps": 3000,
+    "world_scale": 1.0,
+    "depth_units": "iMED millimetres",
+    "strategy_scene_scale": "initial_xyz_max_axis_extent",
+    "architecture_losses_learning_rates_dynamic_strategy_renderer": "unchanged"
+  },
+  "target_rgb_access_during_initialization_or_training": false,
+  "target_camera_access_during_initialization": false
+}

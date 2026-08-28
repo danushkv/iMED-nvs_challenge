@@ -1,0 +1,36 @@
+{
+  "experiment": "M3-B_surface",
+  "reference": {
+    "name": "MV1A_phase11_candidate",
+    "docker_image_id": "aaa952c110d1",
+    "source_tool_masking": false,
+    "depth_filtering": "none",
+    "hole_fill": "nearest_valid",
+    "fill_radius_internal_pixels": 3
+  },
+  "visibility": {
+    "tolerance_mm": 1.0,
+    "relative": 0.01,
+    "depth_softness": 8.0
+  },
+  "surface": {
+    "footprint_scale": 1.0,
+    "radius_min_target_pixels": 0.5,
+    "radius_max_target_pixels": 2.0,
+    "support_size": 5,
+    "mahalanobis_cutoff": 9.0,
+    "depth_discontinuity_mm": 2.0,
+    "depth_discontinuity_relative": 0.02,
+    "chunk_size": 65536,
+    "invalid_surface_fallback": "exact_mv1a_bilinear"
+  },
+  "features_enabled": {
+    "stereo": false,
+    "temporal_fusion": false,
+    "new_confidence_weighting": false,
+    "endo4dgs_fallback": false
+  },
+  "target_rgb_access": false,
+  "target_depth_access": false,
+  "target_mask_access": false
+}

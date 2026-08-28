@@ -1,0 +1,18 @@
+# Strict allowlist used when building with this Dockerfile from the repository
+# root. Docker selects this file in preference to the root .dockerignore.
+**
+!train.py
+!imed_nvs_baseline.py
+!arguments/
+arguments/*
+!arguments/__init__.py
+!scene/
+scene/*
+!scene/imed_loader.py
+!docker_submission/
+docker_submission/*
+!docker_submission/method2_metric_l1/
+docker_submission/method2_metric_l1/*
+!docker_submission/method2_metric_l1/Dockerfile
+!docker_submission/method2_metric_l1/Dockerfile.dockerignore
+!docker_submission/method2_metric_l1/submission_entrypoint.py
