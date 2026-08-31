@@ -1,0 +1,46 @@
+{
+  "primary_metric": "mean PSNR across the fixed four-sequence development set",
+  "secondary_metric": "mean SSIM",
+  "summaries": {
+    "F1_strict_holes": {
+      "mean_psnr": 19.61767732557939,
+      "mean_delta_psnr": 0.504133692937879,
+      "mean_ssim": 0.5262255070347283,
+      "mean_delta_ssim": 0.02251801190514062,
+      "sequence_psnr_wins": 4,
+      "sequence_psnr_losses": 0,
+      "frame_psnr_wins": 720,
+      "frame_psnr_losses": 76,
+      "frame_ssim_wins": 796,
+      "frame_ssim_losses": 0,
+      "valid_m3b_pixels_changed": 0
+    },
+    "F2_boundary1": {
+      "mean_psnr": 19.50887342913067,
+      "mean_delta_psnr": 0.39532979648915934,
+      "mean_ssim": 0.5138240328535961,
+      "mean_delta_ssim": 0.0101165377240085,
+      "sequence_psnr_wins": 4,
+      "sequence_psnr_losses": 0,
+      "frame_psnr_wins": 718,
+      "frame_psnr_losses": 74,
+      "frame_ssim_wins": 795,
+      "frame_ssim_losses": 1,
+      "valid_m3b_pixels_changed": 0
+    },
+    "F2_boundary2": {
+      "mean_psnr": 19.437338549887116,
+      "mean_delta_psnr": 0.32379537371534894,
+      "mean_ssim": 0.5121691801664817,
+      "mean_delta_ssim": 0.008459250606484156,
+      "sequence_psnr_wins": 3,
+      "sequence_psnr_losses": 1,
+      "frame_psnr_wins": 708,
+      "frame_psnr_losses": 75,
+      "frame_ssim_wins": 790,
+      "frame_ssim_losses": 6,
+      "valid_m3b_pixels_changed": 0
+    }
+  },
+  "recommended_variant": "F1_strict_holes"
+}

@@ -13,6 +13,7 @@ method1_source=${METHOD1_SOURCE:-$workspace_root/method1_rgbd_reprojection}
 method2_source=${METHOD2_SOURCE:-$workspace_root/../method2_endo4dgs_plus}
 method3_source=${METHOD3_SOURCE:-$workspace_root/../method3_surface_fusion}
 method4_source=${METHOD4_SOURCE:-$workspace_root/method4_gsharp}
+method8_source=${METHOD8_SOURCE:-$method3_source/method8_hole_fallback}
 
 for command_name in cp cmp dirname find mkdir mktemp sha256sum sort xargs; do
     if ! command -v "$command_name" >/dev/null 2>&1; then
@@ -21,7 +22,7 @@ for command_name in cp cmp dirname find mkdir mktemp sha256sum sort xargs; do
     fi
 done
 
-for source_dir in "$method1_source" "$method2_source" "$method3_source" "$method4_source"; do
+for source_dir in "$method1_source" "$method2_source" "$method3_source" "$method4_source" "$method8_source"; do
     if [[ ! -d "$source_dir" ]]; then
         echo "Missing experiment source root: $source_dir" >&2
         exit 1
@@ -176,6 +177,28 @@ copy_tree_text "$method4_source/docker_submission" \
     "methods/method4_gsharp/code/docker_submission"
 copy_file "$method4_source/third_party/gsplat/LICENSE" \
     "methods/method4_gsharp/code/licenses/GSPLAT_APACHE_2.0.txt"
+
+# Method 8 is the strict inference-only M3-B/Method-2 hole fallback. Generated
+# renders and evaluation imagery are intentionally excluded.
+method8_files=(
+    README.md
+    METHOD8_NOTES.md
+    DOCKERIZATION_HANDOFF.md
+    hole_fallback.py
+    aggregate_fallbacks.py
+)
+for relative in "${method8_files[@]}"; do
+    copy_file "$method8_source/$relative" \
+        "methods/method8_hole_fallback/code/$relative"
+done
+copy_tree_text "$method8_source/scripts" \
+    "methods/method8_hole_fallback/code/scripts"
+copy_file "$method8_source/results/METHOD8_FINAL_REPORT.md" \
+    "methods/method8_hole_fallback/code/METHOD8_FINAL_REPORT.md"
+copy_file "$method8_source/results/summary/method8_ablation.csv" \
+    "experiments/method8_ablation.csv"
+copy_file "$method8_source/results/summary/method8_summary.json" \
+    "experiments/method8_summary.json"
 
 # Create a stable content manifest without embedding machine-specific paths.
 manifest=$release_root/SOURCE_SNAPSHOT.sha256

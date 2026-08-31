@@ -1,7 +1,8 @@
 family,variant,scope,protocol,sequences,frames,psnr,ssim,status,notes
 M1,initial_rgbd,hidden,organizer_hidden,,,19.247,0.581,historical,training-free RGB-D reprojection
-M1.5,MV1A,hidden,organizer_hidden,,,20.089,0.608,keep,confirmed Phase-11 submission
+M1.5,MV1A_method1a,hidden,organizer_hidden,,,20.089,0.608,keep,confirmed Phase-11 submission
 M1.5,MV1A,local_representative,adapted_baseline,1,199,21.761684974,0.681555124,reference,session_004_scene_2_tool_1
+M2,B1_metric_l1_w5e-5,hidden,organizer_hidden,,,18.722,0.617,hidden_below_baseline,hidden Endo-4DGS reference was 18.760 and 0.623
 M2,B0,local_development,endo4dgs_native,4,796,19.232497692,0.566099636,reference,paired baseline
 M2,B1_metric_l1_w5e-5,local_development,endo4dgs_native,4,796,19.261714458,0.565931849,keep,accepted depth component
 M2,B0,local_holdout,endo4dgs_native,1,199,19.099723816,0.502291560,reference,session_006_scene_7_tool_1
@@ -12,7 +13,14 @@ M3,M3-C,local_development,corrected_geometry,4,796,19.0997,0.50163,keep,confiden
 M3,M3-A,local_development,adapted_baseline,4,796,20.2330,0.56517,reference,exact MV1A
 M3,M3-B,local_development,adapted_baseline,4,796,20.2441,0.57482,keep,SSIM winner
 M3,M3-C,local_development,adapted_baseline,4,796,20.2605,0.57222,keep,PSNR winner
+M3,M3-B,hidden,organizer_hidden,,,20.136,0.615,best_hidden_psnr,narrowly beats M3-C
+M3,M3-C,hidden,organizer_hidden,,,20.130,0.614,hidden_runner_up,0.006 dB below M3-B
 M4,M4-A,local_development,corrected_geometry,4,796,18.170299067,0.574302265,keep,50k corrected scene scale
 M4,M4-A,local_development,adapted_baseline,4,796,18.280595790,0.623406003,keep,independent G-SHARP candidate
 M4,M4-B,local_representative,corrected_geometry,1,199,20.884137,0.699523,drop,surface initialization only
 M4,M4-B,local_representative,adapted_baseline,1,199,22.041414,0.709179,drop,lost SSIM on 193 of 199 frames
+M4,M4-A,hidden,organizer_hidden,,,19.007,0.614,submitted,50k corrected scene scale
+M4,M4-B,hidden,organizer_hidden,,,19.040,0.614,hidden_above_m4a,locally dropped but hidden PSNR was 0.033 dB higher
+M8,F1_strict_holes,local_development,corrected_geometry,4,796,19.617677326,0.526225507,keep,mean deltas vs frozen M3-B +0.504133693 PSNR and +0.022518012 SSIM; zero protected pixels changed
+M8,F2_boundary1,local_development,corrected_geometry,4,796,19.508873429,0.513824033,drop,weaker than strict F1
+M8,F2_boundary2,local_development,corrected_geometry,4,796,19.437338550,0.512169180,drop,weaker than strict F1 and one sequence PSNR loss

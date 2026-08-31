@@ -22,12 +22,17 @@ required_files=(
     methods/method2_metric_depth/README.md
     methods/method3_surface_fusion/README.md
     methods/method4_gsharp/README.md
+    methods/method8_hole_fallback/README.md
     methods/method1_rgbd_reprojection/code/render_sequence.py
     methods/method1_5_mv1a/code/docker_submission/phase11_candidate/Dockerfile
     methods/method2_metric_depth/code/train.py
     methods/method3_surface_fusion/code/surface_splat.py
     methods/method4_gsharp/code/train_imed.py
     methods/method4_gsharp/code/GSHARP_GSPLAT_COMMIT.txt
+    methods/method8_hole_fallback/code/hole_fallback.py
+    methods/method8_hole_fallback/code/METHOD8_FINAL_REPORT.md
+    experiments/method8_ablation.csv
+    experiments/method8_summary.json
     SOURCE_SNAPSHOT.sha256
 )
 

@@ -16,9 +16,10 @@ is not duplicated here.
 | --- | --- | --- | --- | --- |
 | [`method1_rgbd_reprojection`](methods/method1_rgbd_reprojection/README.md) | M1 | RGB-D point reprojection | None | First submitted geometry method |
 | [`method1_5_mv1a`](methods/method1_5_mv1a/README.md) | MV1A | Depth-aware soft splats + bounded hole fill | None | Best hidden result among the reprojection stages |
-| [`method2_metric_depth`](methods/method2_metric_depth/README.md) | M2 | Endo-4DGS + metric source-depth supervision | Per sequence | Small, holdout-confirmed gain over its paired baseline |
-| [`method3_surface_fusion`](methods/method3_surface_fusion/README.md) | M3-B/C | Source-derived elliptical surface splats | None | Strong local SSIM/coverage improvements |
-| [`method4_gsharp`](methods/method4_gsharp/README.md) | M4-A/B | Dynamic G-SHARP Gaussians | Per sequence | M4-A retained; M4-B dropped |
+| [`method2_metric_depth`](methods/method2_metric_depth/README.md) | M2 | Endo-4DGS + metric source-depth supervision | Per sequence | Local gain; hidden validation below the paired challenge baseline |
+| [`method3_surface_fusion`](methods/method3_surface_fusion/README.md) | M3-B/C | Source-derived elliptical surface splats | None | Best hidden PSNR; M3-B narrowly wins |
+| [`method4_gsharp`](methods/method4_gsharp/README.md) | M4-A/B | Dynamic G-SHARP Gaussians | Per sequence | M4-B slightly beats M4-A on hidden PSNR despite its local rejection |
+| [`method8_hole_fallback`](methods/method8_hole_fallback/README.md) | M8-F1 | Frozen M3-B with Method-2 holes | Reuses frozen M2 | Final local candidate; strict hole fallback wins 4/4 sequences |
 
 “Method 1.5” was an informal development name. In this release it is called
 **MV1A**, matching the submitted image and experiment records.
@@ -28,17 +29,25 @@ is not duplicated here.
 These are historical hidden-leaderboard results. They must not be compared as
 if they were produced by the local public-sequence protocol.
 
-| Method | Hidden PSNR | Hidden SSIM |
-| --- | ---: | ---: |
-| Endo-4DGS challenge baseline | 18.760 | 0.623 |
-| M1 initial RGB-D reprojection | 19.247 | 0.581 |
-| MV1A | **20.089** | **0.608** |
+| Method | Hidden PSNR | Hidden SSIM | Interpretation |
+| --- | ---: | ---: | --- |
+| Endo-4DGS challenge baseline | 18.760 | 0.623 | External reference |
+| M1 initial RGB-D reprojection | 19.247 | 0.581 | Better PSNR, weaker structure |
+| MV1A (Method 1a) | 20.089 | 0.608 | Strong reprojection reference |
+| M2 metric depth | 18.722 | **0.617** | Best SSIM among our methods, weak PSNR |
+| M3-B surface-aware | **20.136** | 0.615 | Best hidden PSNR |
+| M3-C confidence-gated | 20.130 | 0.614 | Essentially tied, narrowly below M3-B |
+| M4-A G-SHARP | 19.007 | 0.614 | Learned dynamic representation |
+| M4-B surface initialization | 19.040 | 0.614 | +0.033 dB over M4-A at equal reported SSIM |
+
+M8-F1 had not yet received a hidden score when this snapshot was assembled.
+Its fixed four-sequence local gain over M3-B was `+0.5041` dB PSNR and
+`+0.0225` SSIM, while changing zero M3-B-valid pixels.
 
 See [Results and protocol notes](docs/RESULTS.md) for the complete local
 tables, per-sequence values, ablations, and the metric-protocol caveat.
-The optional [qualitative comparison](docs/QUALITATIVE.md) displays one
-unaltered prediction from each assembled method after its assets are approved
-for inclusion.
+The [qualitative comparison plan](docs/QUALITATIVE.md) defines a synchronized
+GIF gallery to add later, after its assets are approved for inclusion.
 
 ## Repository layout
 
@@ -60,13 +69,16 @@ imed_nvs_release/
 │   ├── method2_ablation.csv
 │   ├── method3_ablation.csv
 │   ├── method4_ablation.csv
+│   ├── method8_ablation.csv
+│   ├── method8_summary.json
 │   └── results.csv
 ├── methods/
 │   ├── method1_rgbd_reprojection/
 │   ├── method1_5_mv1a/
 │   ├── method2_metric_depth/
 │   ├── method3_surface_fusion/
-│   └── method4_gsharp/
+│   ├── method4_gsharp/
+│   └── method8_hole_fallback/
 └── scripts/
     ├── assemble_sources.sh
     ├── collect_qualitative_assets.sh

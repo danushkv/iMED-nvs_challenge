@@ -8,9 +8,24 @@ Historical challenge submissions:
 | --- | ---: | ---: | --- |
 | Endo-4DGS baseline | 18.760 | 0.623 | Context only; baseline code excluded |
 | M1 initial RGB-D reprojection | 19.247 | 0.581 | Training-free geometry |
-| MV1A | **20.089** | **0.608** | Depth-aware soft splatting and bounded fill |
+| MV1A (Method 1a) | 20.089 | 0.608 | Depth-aware soft splatting and bounded fill |
+| M2 metric depth | 18.722 | **0.617** | Best SSIM among our methods; below baseline PSNR/SSIM |
+| M3-B surface-aware | **20.136** | 0.615 | Best hidden PSNR |
+| M3-C confidence-gated | 20.130 | 0.614 | Narrowly below M3-B |
+| M4-A G-SHARP | 19.007 | 0.614 | Frozen 50k configuration |
+| M4-B surface initialization | 19.040 | 0.614 | Slight hidden PSNR gain over M4-A |
 
-No hidden result is claimed for M2, M3, M4-A, or M4-B in this release record.
+Hidden-validation deltas worth retaining:
+
+- M3-B versus MV1A: `+0.047 dB` PSNR and `+0.007` SSIM.
+- M3-C versus MV1A: `+0.041 dB` PSNR and `+0.006` SSIM.
+- M2 versus the hidden Endo-4DGS baseline: `-0.038 dB` PSNR and `-0.006` SSIM.
+- M4-B versus M4-A: `+0.033 dB` PSNR and no difference at the reported
+  three-decimal SSIM precision.
+
+M3-B is therefore the strongest hidden-PSNR method in this release. M2 has the
+strongest hidden SSIM among our variants, although the external Endo-4DGS
+baseline remains higher at 0.623.
 
 ## Method 2 paired ablation
 
@@ -29,6 +44,11 @@ means:
 On the preselected holdout, B1 improved B0 from 19.09972/0.50229 to
 **19.18463/0.50529**: `+0.08490 dB` PSNR and `+0.00300` SSIM. Across all five
 sequences it improved mean PSNR by `+0.04035 dB`, with 4/5 wins.
+
+The hidden M2 result was `18.722/0.617`, below the hidden Endo-4DGS reference
+by `0.038 dB` PSNR and `0.006` SSIM. The locally accepted metric-depth change
+therefore did not transfer into a hidden improvement over the challenge
+baseline.
 
 ## Method 3 four-sequence local comparison
 
@@ -53,6 +73,13 @@ M3-B and M3-C improved PSNR and SSIM on all 796 frames under this protocol.
 M3-B is the structural/coverage candidate; M3-C is the baseline-adapted
 primary-PSNR candidate.
 
+Hidden validation resolved the near tie in favor of M3-B:
+
+| Method | Hidden PSNR | Hidden SSIM |
+| --- | ---: | ---: |
+| M3-B | **20.136** | **0.615** |
+| M3-C | 20.130 | 0.614 |
+
 ## Method 4 four-sequence local comparison
 
 M4-A uses 50k initialization points, 500 coarse steps, 3000 fine steps, and a
@@ -73,6 +100,29 @@ Under the adapted-baseline protocol, the paired four-sequence comparison was:
 M4-A was retained as an independent G-SHARP submission candidate: it was much
 weaker in PSNR but stronger in average SSIM. This is not evidence that the
 methods can be blended or selected using target imagery.
+
+Hidden validation produced `19.007/0.614` for M4-A and `19.040/0.614` for
+M4-B. Thus M4-B's hidden PSNR was 0.033 dB higher despite failing the local
+adapted-protocol kill rule. The local DROP decision remains part of the
+experimental record; the hidden result shows that the one-sequence local
+ranking did not predict the hidden ordering within Method 4.
+
+## Method 8 strict hole-only fallback
+
+Method 8 leaves every radius-3-filled M3-B-valid pixel byte-identical and uses
+the frozen Method-2 render only at the remaining unsupported pixels. It uses
+the geometric validity mask, never an RGB-black heuristic. Across the fixed
+four-sequence corrected-geometry development set:
+
+| Variant | Mean PSNR | Delta PSNR vs M3-B | Mean SSIM | Delta SSIM vs M3-B | Sequence PSNR wins/losses |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| F1 strict holes | **19.617677** | **+0.504134** | **0.526226** | **+0.022518** | **4 / 0** |
+| F2 exclude 1 px boundary | 19.508873 | +0.395330 | 0.513824 | +0.010117 | 4 / 0 |
+| F2 exclude 2 px boundary | 19.437339 | +0.323795 | 0.512169 | +0.008459 | 3 / 1 |
+
+F1 yielded 720/796 per-frame PSNR wins and 796/796 SSIM wins, with zero
+protected M3-B pixels changed. Boundary exclusion removed useful fallback
+pixels, so F2 was rejected. F1 is frozen; no hidden result is claimed here.
 
 ## Method 4 representative-sequence ablations
 

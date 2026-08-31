@@ -32,6 +32,11 @@ On the preselected holdout, B1 improved by `+0.08490 dB` PSNR and `+0.00300`
 SSIM. See [`method2_ablation.csv`](../../experiments/method2_ablation.csv) for
 the rejected variants.
 
+Hidden validation gave `18.722 PSNR / 0.617 SSIM`. Relative to the hidden
+Endo-4DGS challenge reference (`18.760/0.623`), this is `-0.038 dB` PSNR and
+`-0.006` SSIM. The local/holdout metric-depth gain therefore did not transfer
+into a hidden improvement over the challenge baseline.
+
 ## Source overlay
 
 The scientific/runtime delta consists of:

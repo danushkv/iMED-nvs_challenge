@@ -44,6 +44,16 @@ below threshold = exact MV1A fallback
 Under corrected geometry, both variants beat M3-A on all 796 frames. Under the
 adapted protocol, both beat M3-A in SSIM on all 796 frames.
 
+Hidden validation narrowly favored M3-B:
+
+| Variant | Hidden PSNR | Hidden SSIM |
+| --- | ---: | ---: |
+| M3-B | **20.136** | **0.615** |
+| M3-C | 20.130 | 0.614 |
+
+M3-B improved on hidden MV1A by `+0.047 dB` PSNR and `+0.007` SSIM and is the
+strongest hidden-PSNR method in the release.
+
 ## Environment with uv
 
 Use the MV1A-compatible stack. The confirmed environment was PyTorch 2.1.2 and

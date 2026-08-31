@@ -14,6 +14,18 @@ iMED camera, depth, masking, and scale conventions.
 M4-B changes initialization only; it is not an image-space blend and never
 consumes M3's target prediction.
 
+Hidden validation was:
+
+| Variant | Hidden PSNR | Hidden SSIM |
+| --- | ---: | ---: |
+| M4-A | 19.007 | 0.614 |
+| M4-B | **19.040** | 0.614 |
+
+M4-B was 0.033 dB higher in hidden PSNR at equal reported SSIM precision. This
+does not erase the controlled local result—M4-B lost adapted-protocol SSIM on
+193/199 representative frames—but it shows that the local one-sequence kill
+rule did not predict the hidden M4-A/M4-B ordering.
+
 ## Pinned environment
 
 ```text
