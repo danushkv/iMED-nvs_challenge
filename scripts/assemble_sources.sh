@@ -69,7 +69,7 @@ copy_tree_text() {
         find "$source_dir" -type f \
             \( -name '*.py' -o -name '*.sh' -o -name '*.md' \
                -o -name '*.txt' -o -name '*.json' -o -name '*.yml' \
-               -o -name '*.yaml' -o -name 'Dockerfile' \
+               -o -name '*.yaml' -o -name '*.sha256' -o -name 'Dockerfile' \
                -o -name 'Dockerfile.*' -o -name '.dockerignore' \) \
             -print0
     )
@@ -189,16 +189,30 @@ method8_files=(
 )
 for relative in "${method8_files[@]}"; do
     copy_file "$method8_source/$relative" \
-        "methods/method8_hole_fallback/code/$relative"
+        "methods/geoscope/code/$relative"
 done
 copy_tree_text "$method8_source/scripts" \
-    "methods/method8_hole_fallback/code/scripts"
+    "methods/geoscope/code/scripts"
 copy_file "$method8_source/results/METHOD8_FINAL_REPORT.md" \
-    "methods/method8_hole_fallback/code/METHOD8_FINAL_REPORT.md"
+    "methods/geoscope/code/METHOD8_FINAL_REPORT.md"
 copy_file "$method8_source/results/summary/method8_ablation.csv" \
     "experiments/method8_ablation.csv"
 copy_file "$method8_source/results/summary/method8_summary.json" \
     "experiments/method8_summary.json"
+# The release-facing Docker README replaces cluster-specific development paths;
+# copy every other audited context file verbatim and preserve that curated file.
+method8_docker_source=$method3_source/docker_submission/method8_f1
+while IFS= read -r -d '' path; do
+    relative=${path#"$method8_docker_source"/}
+    copy_file "$path" "methods/geoscope/code/docker_submission/method8_f1/$relative"
+done < <(
+    find "$method8_docker_source" -type f ! -name README.md \
+        \( -name '*.py' -o -name '*.sh' -o -name '*.md' \
+           -o -name '*.txt' -o -name '*.json' -o -name '*.yml' \
+           -o -name '*.yaml' -o -name '*.sha256' -o -name 'Dockerfile' \
+           -o -name 'Dockerfile.*' -o -name '.dockerignore' \) \
+        -print0
+)
 
 # Create a stable content manifest without embedding machine-specific paths.
 manifest=$release_root/SOURCE_SNAPSHOT.sha256

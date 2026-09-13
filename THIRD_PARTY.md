@@ -1,8 +1,8 @@
 # Third-party software and licensing
 
-This release combines original challenge adaptation code with research
-software maintained by other projects. Keeping the repository private does
-not remove the obligation to preserve their licenses and attribution.
+This release combines MIT-licensed original project code with research
+software maintained by other projects. The root MIT license does not replace
+or override the licenses and attribution requirements of those components.
 
 ## Endo-4DGS and Gaussian Splatting
 
@@ -36,6 +36,20 @@ license:    Apache-2.0
 Prefer a Git submodule pinned to that commit or clone the exact commit during
 environment setup. Do not replace it with an unpinned `main` checkout.
 
+## GeoSCOPE container parents
+
+The final GeoSCOPE Docker context uses two historical Synapse images:
+
+```text
+docker.synapse.org/syn74277461/imed-nvs-baseline:v1
+docker.synapse.org/syn74277461/nct_tso-mv1a-nvs:latest
+```
+
+The first supplies the licensed Endo-4DGS runtime. The second supplies the
+exact camera/reprojection helpers used by M3-B. Image layers are not committed
+to this repository. The mutable `latest` tag should be replaced by a recorded
+digest for archival reproducibility when possible.
+
 ## Dataset and challenge material
 
 The iMED challenge dataset, target RGB frames, organizer Docker images, and
@@ -43,12 +57,13 @@ challenge evaluation package are not licensed by this repository. They are
 not included in the release snapshot. Follow the organizer's access and
 redistribution terms.
 
-## Before making the repository public
+## Release obligations
 
 1. Retain the full Endo-4DGS/Gaussian-Splatting license with Method 2.
 2. Retain gsplat's Apache-2.0 license and notices if vendoring its source.
-3. Add citations requested by Endo-4DGS, Gaussian Splatting, gsplat/G-SHARP,
-   and the iMED challenge.
-4. Confirm that qualitative images may be redistributed.
-5. Add an explicit license for original code; do not assume a third-party
-   license automatically covers it.
+3. Include citations requested by Endo-4DGS, Gaussian Splatting,
+   gsplat/G-SHARP, and the iMED challenge in publications using the code.
+4. Preserve the provenance manifests accompanying the permitted
+   prediction-only qualitative assets.
+5. Apply the root MIT license only to original release code; do not assume it
+   automatically covers a third-party component.

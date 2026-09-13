@@ -1,0 +1,25 @@
+[project]
+name = "geoscope-imed-nvs"
+version = "0.1.0"
+description = "Geometry-first selective completion for endoscopic novel-view synthesis"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "numpy==1.24.4",
+    "pillow==10.2.0",
+    "scipy==1.10.1",
+    "torch==2.1.2",
+    "torchvision==0.16.2",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118" }
+torchvision = { index = "pytorch-cu118" }

@@ -27,12 +27,13 @@ There is intentionally no root environment:
 
 | Family | Recommended environment |
 | --- | --- |
-| M1 / MV1A / M3 | PyTorch 2.1.2 + CUDA 11.8, matching the confirmed MV1A image |
+| M1 / MV1A / M3 | Root uv project: Python 3.10, PyTorch 2.1.2 + CUDA 11.8 |
 | M2 | Official challenge Endo-4DGS CUDA 11.8 Docker base plus the released overlay |
 | M4 | CPython 3.11, PyTorch 2.9.1+cu126, CUDA toolkit/runtime 12.6, pinned gsplat |
+| GeoSCOPE | Final combined Docker context under `methods/geoscope/` |
 
-Follow the method README rather than installing all dependencies into one
-environment.
+Run `uv sync` at the repository root for training-free development. Follow the
+method README rather than installing all CUDA stacks into one environment.
 
 ## 3. Verify geometry before expensive work
 

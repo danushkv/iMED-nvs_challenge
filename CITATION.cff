@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use GeoSCOPE, please cite this software and the upstream methods listed in THIRD_PARTY.md."
+title: "GeoSCOPE: Geometry-First Novel View Synthesis with Selective Learned Completion"
+type: software
+authors:
+  - name: "NCT-TSO Team"
+license: MIT
+repository-code: "https://github.com/danushkv/iMED-nvs_challenge"
+url: "https://github.com/danushkv/iMED-nvs_challenge"
+version: 0.1.0
+date-released: 2026-09-13
+keywords:
+  - novel view synthesis
+  - endoscopy
+  - RGB-D reprojection
+  - Gaussian splatting
+  - MICCAI

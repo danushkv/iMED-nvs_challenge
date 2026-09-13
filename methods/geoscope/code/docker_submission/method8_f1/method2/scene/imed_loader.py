@@ -1,0 +1,286 @@
+import os
+import re
+import glob
+import numpy as np
+from PIL import Image
+from scipy.spatial.transform import Rotation as R
+from torchvision import transforms as T
+import torch
+
+from utils.graphics_utils import focal2fov
+from scene.pre_train_pc import get_pointcloud
+from scene.endo_loader import CameraInfo
+
+
+class IMED_Dataset:
+    def __init__(self, datadir, downsample=1.0):
+        self.root_dir = datadir
+        self.downsample = downsample
+        self.transform = T.ToTensor()
+        self.maxtime = 1.0
+
+        self._validate_structure()
+        self.K_map = self._parse_intrinsics()
+        self.c2w_map = self._parse_poses()
+        self._load_streams()
+
+        self.train_idxs = list(range(len(self.train_records)))
+        self.test_idxs = list(range(len(self.test_records)))
+        self.video_idxs = self.test_idxs
+
+    def _validate_structure(self):
+        assert os.path.isfile(os.path.join(self.root_dir, "pose.txt")), "Missing pose.txt"
+        assert os.path.isfile(os.path.join(self.root_dir, "K.txt")), "Missing K.txt"
+        for scope in ("endoscope1", "endoscope2"):
+            path = os.path.join(self.root_dir, scope)
+            assert os.path.isdir(path), f"Missing required folder: {path}"
+        for subdir in ("L", "depthL", "toolL"):
+            path = os.path.join(self.root_dir, "endoscope2", subdir)
+            assert os.path.isdir(path), f"Missing required training folder: {path}"
+
+    def _parse_intrinsics(self):
+        k_path = os.path.join(self.root_dir, "K.txt")
+        with open(k_path, "r", encoding="utf-8") as f:
+            raw_lines = [line.strip() for line in f if line.strip()]
+
+        matrices = {}
+        i = 0
+        while i < len(raw_lines):
+            line = raw_lines[i]
+            if line.startswith("#"):
+                header = line[1:].strip()
+                if not header.startswith("K"):
+                    i += 1
+                    continue
+                key = header.split()[0]
+                assert i + 3 < len(raw_lines), f"Incomplete matrix block for {key}"
+                rows = []
+                for j in range(1, 4):
+                    vals = [float(v) for v in raw_lines[i + j].split()]
+                    assert len(vals) == 3, f"Expected 3 intrinsics values in line: {raw_lines[i + j]}"
+                    rows.append(vals)
+                matrices[key] = np.array(rows, dtype=np.float32)
+                i += 4
+                continue
+            i += 1
+
+        for needed in ("K1_L", "K2_L"):
+            assert needed in matrices, f"Missing intrinsics {needed} in K.txt"
+        return matrices
+
+    def _parse_poses(self):
+        pose_path = os.path.join(self.root_dir, "pose.txt")
+        with open(pose_path, "r", encoding="utf-8") as f:
+            lines = [line.strip() for line in f if line.strip()]
+
+        assert len(lines) == 2, f"Expected exactly 2 static poses in pose.txt, found {len(lines)}"
+        c2w_by_cam = {}
+        for line in lines:
+            parts = line.split()
+            assert len(parts) == 8, f"Pose row must have 8 values: {line}"
+            cam_id = int(parts[0])
+            t = np.array([float(v) for v in parts[1:4]], dtype=np.float32)
+            q = np.array([float(v) for v in parts[4:8]], dtype=np.float32)
+            rot = R.from_quat(q).as_matrix().astype(np.float32)
+            c2w = np.eye(4, dtype=np.float32)
+            c2w[:3, :3] = rot
+            c2w[:3, 3] = t
+            c2w_by_cam[cam_id] = c2w
+
+        assert 0 in c2w_by_cam and 1 in c2w_by_cam, "pose.txt must provide camera ids 0 and 1"
+        return {"cam2": c2w_by_cam[0], "cam1": c2w_by_cam[1]}
+
+    def _extract_frame_id(self, path):
+        name = os.path.basename(str(path))
+        match = re.match(r"frame_(\d+)(?:\.(png|npy))?$", name)
+        assert match is not None, f"Unexpected frame naming: {name}"
+        return int(match.group(1))
+
+    def _stem(self, path):
+        return os.path.splitext(os.path.basename(path))[0]
+
+    def _path_map(self, pattern):
+        return {self._stem(path): path for path in sorted(glob.glob(pattern))}
+
+    def _target_frame_stems(self):
+        path = os.path.join(self.root_dir, "target_frames.txt")
+        if not os.path.isfile(path):
+            return []
+        with open(path, "r", encoding="utf-8") as handle:
+            return [
+                os.path.splitext(line.strip())[0]
+                for line in handle
+                if line.strip()
+            ]
+
+    def _collect_stream(self, scope):
+        rgb_map = self._path_map(os.path.join(self.root_dir, scope, "L", "*.png"))
+        depth_map = self._path_map(os.path.join(self.root_dir, scope, "depthL", "*.npy"))
+        mask_map = self._path_map(os.path.join(self.root_dir, scope, "toolL", "*.png"))
+
+        if scope == "endoscope2":
+            assert rgb_map, f"No RGB frames found in {scope}/L"
+            frame_names = sorted(rgb_map)
+            missing_depth = [name for name in frame_names if name not in depth_map]
+            missing_mask = [name for name in frame_names if name not in mask_map]
+            assert not missing_depth, f"Missing depth frame(s) in {scope}: {missing_depth[:5]}"
+            assert not missing_mask, f"Missing mask frame(s) in {scope}: {missing_mask[:5]}"
+        else:
+            frame_names = sorted(rgb_map) or self._target_frame_stems()
+            if not frame_names:
+                frame_names = sorted(depth_map) or sorted(mask_map)
+            assert frame_names, (
+                f"No target frames found for {scope}. Provide endoscope1/L, "
+                "target_frames.txt, endoscope1/depthL, or endoscope1/toolL."
+            )
+
+        records = []
+        for name in frame_names:
+            frame_id = self._extract_frame_id(name)
+            records.append(
+                {
+                    "frame_id": frame_id,
+                    "rgb": rgb_map.get(name),
+                    "depth": depth_map.get(name),
+                    "mask": mask_map.get(name),
+                    "image_name": f"{name}.png",
+                }
+            )
+        return records
+
+    def _load_streams(self):
+        self.train_records = self._collect_stream("endoscope2")
+        self.test_records = self._collect_stream("endoscope1")
+        train_ids = [r["frame_id"] for r in self.train_records]
+        test_ids = [r["frame_id"] for r in self.test_records]
+        assert train_ids == test_ids, "Train/test camera frame ids must align exactly"
+
+        first_img = np.array(Image.open(self.train_records[0]["rgb"]))
+        first_depth = np.load(self.train_records[0]["depth"])
+        assert first_img.ndim == 3 and first_img.shape[2] == 3, "Expected RGB image with 3 channels"
+        assert first_depth.ndim == 2, "Expected depth map as 2D array"
+        self.H_rgb, self.W_rgb = int(first_img.shape[0]), int(first_img.shape[1])
+        self.H, self.W = int(first_depth.shape[0]), int(first_depth.shape[1])
+        assert self.H_rgb % self.H == 0 and self.W_rgb % self.W == 0, "RGB/depth resolution ratio must be integer"
+        self.scale_y = self.H_rgb // self.H
+        self.scale_x = self.W_rgb // self.W
+        assert self.scale_x == self.scale_y, "Anisotropic RGB/depth scaling is not supported"
+        assert self.scale_x == 2, "Expected 2x RGB-to-depth scaling for IMED sequence"
+
+    def _load_mask(self, mask_path):
+        raw = np.array(Image.open(mask_path))
+        if raw.ndim == 3:
+            raw = raw[..., 0]
+        assert raw.ndim == 2, f"Mask must be 2D at {mask_path}"
+        unique_vals = np.unique(raw)
+        assert np.all(np.isin(unique_vals, [0, 255])), f"Mask must be binary 0/255 at {mask_path}"
+        mask = 1.0 - (raw.astype(np.float32) / 255.0)
+        return mask.astype(np.bool_)
+
+    def _load_resized_rgb(self, rgb_path):
+        if rgb_path is None:
+            return np.zeros((self.H, self.W, 3), dtype=np.float32)
+        img = Image.open(rgb_path).convert("RGB")
+        assert img.size == (self.W_rgb, self.H_rgb), f"RGB shape mismatch at {rgb_path}"
+        if (self.W, self.H) != (self.W_rgb, self.H_rgb):
+            img = img.resize((self.W, self.H), Image.BILINEAR)
+        arr = np.array(img).astype(np.float32) / 255.0
+        assert arr.shape == (self.H, self.W, 3), f"Resized RGB shape mismatch at {rgb_path}"
+        return arr
+
+    def _load_resized_mask(self, mask_path):
+        if mask_path is None:
+            return np.ones((self.H, self.W), dtype=np.bool_)
+        mask = self._load_mask(mask_path).astype(np.uint8) * 255
+        img = Image.fromarray(mask, mode="L")
+        assert img.size == (self.W_rgb, self.H_rgb), f"Mask shape mismatch at {mask_path}"
+        if (self.W, self.H) != (self.W_rgb, self.H_rgb):
+            img = img.resize((self.W, self.H), Image.NEAREST)
+        out = np.array(img)
+        assert out.ndim == 2 and out.shape == (self.H, self.W), f"Resized mask shape mismatch at {mask_path}"
+        return (out > 0)
+
+    def _record_to_camera(self, record, c2w, K, time_val, uid):
+        color = self._load_resized_rgb(record["rgb"])
+        if record["depth"] is None:
+            depth = np.zeros((self.H, self.W), dtype=np.float32)
+        else:
+            depth = np.load(record["depth"]).astype(np.float32)
+            assert depth.shape == (self.H, self.W), f"Depth shape mismatch at {record['depth']}"
+        mask = self._load_resized_mask(record["mask"])
+        assert mask.shape == (self.H, self.W), f"Mask shape mismatch at {record['mask']}"
+
+        fx = float(K[0, 0]) / (self.downsample * self.scale_x)
+        fy = float(K[1, 1]) / (self.downsample * self.scale_y)
+        cx = float(K[0, 2]) / (self.downsample * self.scale_x)
+        cy = float(K[1, 2]) / (self.downsample * self.scale_y)
+
+        w2c = np.linalg.inv(c2w)
+        rot = w2c[:3, :3]
+        trans = w2c[:3, 3]
+        rot = np.transpose(rot)
+
+        image = self.transform(np.ascontiguousarray(color))
+        depth_t = torch.from_numpy(np.ascontiguousarray(depth[None, ...]))
+        mask_t = torch.from_numpy(np.ascontiguousarray(mask))
+        fov_x = focal2fov(fx, self.W)
+        fov_y = focal2fov(fy, self.H)
+        return CameraInfo(
+            uid=uid,
+            R=rot,
+            T=trans,
+            FovY=fov_y,
+            FovX=fov_x,
+            image=image,
+            depth=depth_t,
+            image_path=record["rgb"] or record["image_name"],
+            image_name=record["image_name"],
+            width=self.W,
+            height=self.H,
+            time=time_val,
+            mask=mask_t,
+            Zfar=None,
+            Znear=None,
+            pc=None,
+        )
+
+    def format_infos(self, split):
+        assert split in ("train", "test", "video"), f"Unsupported split: {split}"
+        if split == "train":
+            records = self.train_records
+            c2w = self.c2w_map["cam2"]
+            K = self.K_map["K2_L"]
+        else:
+            records = self.test_records
+            c2w = self.c2w_map["cam1"]
+            K = self.K_map["K1_L"]
+
+        n = len(records)
+        denom = max(n - 1, 1)
+        cams = []
+        for idx, record in enumerate(records):
+            time_val = idx / denom
+            cams.append(self._record_to_camera(record, c2w, K, time_val, idx))
+        return cams
+
+    def get_pretrain_pcd(self):
+        first = self.train_records[0]
+        color = self._load_resized_rgb(first["rgb"]).transpose(2, 0, 1)
+        depth = np.load(first["depth"]).astype(np.float32)[None, ...]
+        mask = self._load_resized_mask(first["mask"])[None, ...]
+
+        K = self.K_map["K2_L"]
+        intrinsics = [
+            float(K[0, 0]) / self.scale_x,
+            float(K[1, 1]) / self.scale_y,
+            float(K[0, 2]) / self.scale_x,
+            float(K[1, 2]) / self.scale_y,
+        ]
+        w2c = np.linalg.inv(self.c2w_map["cam2"])
+        pts, cols = get_pointcloud(color, depth, intrinsics, w2c, mask=mask)
+        assert pts.shape[0] > 0, "Pretrain point cloud is empty"
+        normals = np.zeros((pts.shape[0], 3), dtype=np.float32)
+        return pts, cols, normals
+
+    def get_maxtime(self):
+        return self.maxtime

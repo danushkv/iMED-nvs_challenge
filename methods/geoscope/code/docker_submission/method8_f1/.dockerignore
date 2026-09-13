@@ -1,0 +1,17 @@
+**
+!Dockerfile
+!combined_entrypoint.py
+!f1_fusion.py
+!method2/
+!method2/train.py
+!method2/arguments/
+!method2/arguments/__init__.py
+!method2/scene/
+!method2/scene/imed_loader.py
+!method2/imed_nvs_baseline.py
+!m3b/
+!m3b/confidence.py
+!m3b/surface_geometry.py
+!m3b/surface_splat.py
+!m3b/configs/
+!m3b/configs/m3_surface_default.json

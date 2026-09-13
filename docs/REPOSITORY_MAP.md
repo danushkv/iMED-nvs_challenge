@@ -1,7 +1,8 @@
 # Repository and experiment map
 
-The release is assembled from four frozen experiment roots and the Method-8
-subtree of the frozen Method-3 root.
+The release is assembled from four frozen experiment roots, the Method-8
+experiment subtree, and its submitted Docker context in the frozen Method-3
+root.
 
 | Release component | Source root | Source policy |
 | --- | --- | --- |
@@ -9,7 +10,7 @@ subtree of the frozen Method-3 root.
 | M2 | sibling `method2_endo4dgs_plus` | Copy only the Endo-4DGS overlay, configs, reports, and Docker adapter |
 | M3 | sibling `method3_surface_fusion` | Read-only source; copy curated inference files, configs, reports, and Docker adapter |
 | M4 | `Endo-4DGS/method4_gsharp` | Copy adapter/trainer/configuration files; reference pinned gsplat separately |
-| M8 | sibling `method3_surface_fusion/method8_hole_fallback` | Copy strict fallback code, reports, scripts, and compact summaries only |
+| GeoSCOPE / M8 | sibling `method3_surface_fusion/method8_hole_fallback` plus `docker_submission/method8_f1` | Copy strict fallback experiments and the exact submitted runtime context |
 
 ## Method lineage
 
@@ -31,7 +32,7 @@ Independent G-SHARP branch
 
 Frozen hybrid branch
 M3-B + M2 metric depth
-└── M8-F1: Method 2 only where radius-3-filled M3-B is unsupported
+└── GeoSCOPE (M8-F1): Method 2 only where radius-3-filled M3-B is unsupported
 ```
 
 M4-B borrows the source-geometry idea from M3, but not M3's target prediction.

@@ -107,9 +107,9 @@ adapted-protocol kill rule. The local DROP decision remains part of the
 experimental record; the hidden result shows that the one-sequence local
 ranking did not predict the hidden ordering within Method 4.
 
-## Method 8 strict hole-only fallback
+## GeoSCOPE (Method 8) strict hole-only fallback
 
-Method 8 leaves every radius-3-filled M3-B-valid pixel byte-identical and uses
+GeoSCOPE leaves every radius-3-filled M3-B-valid pixel byte-identical and uses
 the frozen Method-2 render only at the remaining unsupported pixels. It uses
 the geometric validity mask, never an RGB-black heuristic. Across the fixed
 four-sequence corrected-geometry development set:
@@ -122,7 +122,8 @@ four-sequence corrected-geometry development set:
 
 F1 yielded 720/796 per-frame PSNR wins and 796/796 SSIM wins, with zero
 protected M3-B pixels changed. Boundary exclusion removed useful fallback
-pixels, so F2 was rejected. F1 is frozen; no hidden result is claimed here.
+pixels, so F2 was rejected. F1 is the final submitted method; no hidden
+GeoSCOPE result is recorded in this snapshot.
 
 ## Method 4 representative-sequence ablations
 

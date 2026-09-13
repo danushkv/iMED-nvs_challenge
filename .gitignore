@@ -29,6 +29,11 @@ dataset/
 assets/qualitative/*.png
 assets/qualitative/*.jpg
 assets/qualitative/*.gif
+assets/qualitative/*.json
 
 # Keep the gallery documentation
 !assets/qualitative/README.md
+!assets/qualitative/geoscope_scene2.gif
+!assets/qualitative/geoscope_scene2.json
+!assets/qualitative/geoscope_scene6.gif
+!assets/qualitative/geoscope_scene6.json

@@ -4,6 +4,10 @@ This repository is an experiment record first and a software package second.
 Changes should preserve comparability and the challenge's source-only inference
 boundary.
 
+GeoSCOPE F1 is frozen. Experimental changes must use a new variant name and
+must not silently alter the final Docker entrypoint or its strict valid-pixel
+invariant.
+
 ## Adding an experiment
 
 1. Give the variant a unique name and name its frozen parent.

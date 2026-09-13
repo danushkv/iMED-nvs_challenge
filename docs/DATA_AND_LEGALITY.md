@@ -34,14 +34,14 @@ pixel round-trip error.
 
 ## Legal inference inputs
 
-| Input | M1/MV1A | M2 | M3 | M4 |
-| --- | :---: | :---: | :---: | :---: |
-| Endoscope2/L RGB | Yes | Yes | Yes | Yes |
-| Endoscope2/L depth | Yes | Yes | Yes | Yes |
-| Endoscope2/L tool mask | No in MV1A | Yes | No | Yes |
-| Source/target calibration | Yes | Yes | Yes | Yes |
-| Endoscope1 RGB | **No** | **No** | **No** | **No** |
-| Endoscope1 tool mask | No | No | No | No |
+| Input | M1/MV1A | M2 | M3 | M4 | GeoSCOPE |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| Endoscope2/L RGB | Yes | Yes | Yes | Yes | Yes |
+| Endoscope2/L depth | Yes | Yes | Yes | Yes | Yes |
+| Endoscope2/L tool mask | No in MV1A | Yes | No | Yes | Yes, M2 branch |
+| Source/target calibration | Yes | Yes | Yes | Yes | Yes |
+| Endoscope1 RGB | **No** | **No** | **No** | **No** | **No** |
+| Endoscope1 tool mask | No | No | No | No | No |
 
 Endoscope1 RGB and target masks may be opened only by a separate offline
 evaluator after predictions are frozen. They must not influence training,
