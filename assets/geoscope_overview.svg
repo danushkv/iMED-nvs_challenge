@@ -25,6 +25,7 @@
       .title { font-family: "DejaVu Sans"; font-size: 52px; font-weight: 800; fill: #fff; }
       .tag { font-family: "DejaVu Sans"; font-size: 19px; fill: #bcd2df; }
       .head { font-family: "DejaVu Sans"; font-size: 20px; font-weight: 700; fill: #fff; }
+      .branch-head { font-family: "DejaVu Sans"; font-size: 18px; font-weight: 700; fill: #fff; }
       .body { font-family: "DejaVu Sans"; font-size: 15px; fill: #d9e8ef; }
       .tiny { font-family: "DejaVu Sans"; font-size: 13px; fill: #a9c4d5; }
       .choice { font-family: "DejaVu Sans"; font-size: 17px; font-weight: 700; fill: #fff; }
@@ -50,13 +51,13 @@
   <text x="80" y="268" class="body">intrinsics + poses</text>
   <text x="80" y="294" class="body">source tool mask</text>
 
-  <text x="375" y="184" class="head">M3-B · geometry first</text>
-  <text x="375" y="214" class="body">Surface-aware RGB-D splatting</text>
-  <text x="375" y="239" class="body">+ bounded radius-3 fill</text>
+  <text x="482.5" y="184" class="branch-head" text-anchor="middle">M3-B · geometry first</text>
+  <text x="482.5" y="214" class="body" text-anchor="middle">Surface-aware RGB-D splatting</text>
+  <text x="482.5" y="239" class="body" text-anchor="middle">+ bounded radius-3 fill</text>
 
-  <text x="375" y="344" class="head">M2 · learned completion</text>
-  <text x="375" y="374" class="body">Metric-depth Endo-4DGS</text>
-  <text x="375" y="399" class="body">trained per source sequence</text>
+  <text x="482.5" y="344" class="branch-head" text-anchor="middle">M2 · learned completion</text>
+  <text x="482.5" y="374" class="body" text-anchor="middle">Metric-depth Endo-4DGS</text>
+  <text x="482.5" y="399" class="body" text-anchor="middle">trained per source sequence</text>
 
   <text x="815" y="210" class="head" text-anchor="middle">Selective completion</text>
   <text x="815" y="250" class="body" text-anchor="middle">M3-B supported?</text>
