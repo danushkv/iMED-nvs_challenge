@@ -55,10 +55,10 @@ column.
 | M1 | Direct RGB-D reprojection | 19.247 / 0.581 | Historical |
 | MV1A | Depth-aware splats + bounded fill | 20.089 / 0.608 | Geometry reference |
 | M2 | Endo-4DGS + metric depth | 18.722 / 0.617 | GeoSCOPE fallback |
-| **M3-B** | Surface-aware RGB-D splats | **20.136 / 0.615** | GeoSCOPE geometry branch |
+| M3-B | Surface-aware RGB-D splats | 20.136 / 0.615 | GeoSCOPE geometry branch |
 | M3-C | Confidence-gated surface splats | 20.130 / 0.614 | Ablation |
 | M4-A / M4-B | Dynamic G-SHARP | 19.007 / 0.614; 19.040 / 0.614 | Ablations |
-| **GeoSCOPE (M8-F1)** | M3-B + strict hole-only M2 | Not recorded in this snapshot | **Final submission** |
+| **GeoSCOPE (M8-F1)** | M3-B + strict hole-only M2 | **20.412/0.626** | **Final submission** |
 
 GeoSCOPE local ablation:
 
